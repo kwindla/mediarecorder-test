@@ -34,4 +34,6 @@ https://kwindla.github.io/mediarecorder-test/
 1. Click on [ record from canvas ] to see the bug
 2. Click on [ record directly from camera ] to see a smooth framerate both on canvas and in video file
 
-On the live test page, CANVAS_GRAB_FRAMERATE is 30 and CANVAS_DRAW_FRAMERATE is 20.
+Recordings will be 11 seconds long.
+
+On this live test page, CANVAS_GRAB_FRAMERATE is 30 and CANVAS_DRAW_FRAMERATE is 20.
