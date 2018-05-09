@@ -1,4 +1,4 @@
-# mediarecorder-test
+# os x chrome 66 canvas / mediarecorder test
 
 Reduced test case showing/testing Chrome 66 on OS X canvas.context.drawImage stall issue when
 a stream returned by canvas.captureStream is feeding a MediaRecorder
