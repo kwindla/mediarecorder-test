@@ -48,6 +48,10 @@ function startRecording(stream) {
   );
   mediaRecorder.ondataavailable = onData;
   mediaRecorder.onerror = onError;
+
+  // it is not actually necessary to start() the MediaRecorder
+  // instance to see the issue. draws to the canvas still stall if you
+  // comment out the following line ...
   mediaRecorder.start(RECORDER_TIMESLICE);
 }
 
