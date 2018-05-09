@@ -28,7 +28,7 @@ async function recordDirectFromCamera() {
 async function recordFromCanvas() {
   console.log('recording from canvas');
   await getCameraStream();
-  let vidStream = this.canvas.captureStream(CANVAS_GRAB_FRAMERATE);
+  let vidStream = canvas.captureStream(CANVAS_GRAB_FRAMERATE);
   let stream = new MediaStream([
     vidStream.getVideoTracks()[0],
   ]);
