@@ -9,14 +9,28 @@ const CANVAS_GRAB_FRAMERATE = 30;
 const BACKGROUND_COLOR = '#1F2D3D';
 const RECORDING_DURATION = 11 * 1000;
 
-window.camStream;
-window.canvas = document.getElementById('testCanvas');
-window.canvasDrawInterval;
-window.mediaRecorder;
-window.isRecording;
+window.camStream = null;
+window.canvas = null;
+window.canvasDrawInterval = null;
+window.canvasStream = null;
+window.mediaRecorder = null;
 window.recordingBuff = [];
 
 // ----
+
+createCanvas();
+
+// ----
+
+function createCanvas() {
+  if (canvas) {
+    document.getElementById('canvasHolder').removeChild(canvas);
+    canvas = null;
+  }
+  canvas = document.createElement('canvas');
+  canvas.style = 'width:50%';
+  document.getElementById('canvasHolder').appendChild(canvas);
+}
 
 async function recordDirectFromCamera() {
   console.log('recording from camera');
@@ -28,9 +42,9 @@ async function recordDirectFromCamera() {
 async function recordFromCanvas() {
   console.log('recording from canvas');
   await getCameraStream();
-  let vidStream = canvas.captureStream(CANVAS_GRAB_FRAMERATE);
+  canvasStream = canvas.captureStream(CANVAS_GRAB_FRAMERATE);
   let stream = new MediaStream([
-    vidStream.getVideoTracks()[0],
+    canvasStream.getVideoTracks()[0],
   ]);
 
   startRecording(stream);
@@ -38,6 +52,10 @@ async function recordFromCanvas() {
 }
 
 function startRecording(stream) {
+  // if the stream is never used to create a MediaRecorder instance,
+  // the issue does not show up
+  // return;
+
   mediaRecorder = new MediaRecorder(
     stream,
     {
@@ -58,8 +76,12 @@ function startRecording(stream) {
 function stopRecording() {
   console.log('stopping recording');
   mediaRecorder.stop();
-  camStream.getTracks().forEach((t)=>t.stop());
   clearInterval(canvasDrawInterval);
+  canvasDrawInterval = null;
+  camStream.getTracks().forEach((t)=>t.stop());
+  camStream = null;
+  canvasStream.getTracks().forEach((t)=>t.stop());
+  canvasStream = null;
 }
 
 function onData (blobEvent) {
@@ -70,6 +92,8 @@ function onData (blobEvent) {
                         'testfile.webm',
                         {type: 'video/webm'});
     saveAs(file);
+    mediaRecorder = null;
+    recordingBuff = [];
     return;
   }
   recordingBuff.push(blobEvent.data);
